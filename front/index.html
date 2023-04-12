@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://img.icons8.com/office/16/null/dew-point.png"
+    />
+    <title>Smart System IOT</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- background -->
+    <div class="glass"></div>
+
+    <main>
+      <p class="main-title">Smart Plant System</p>
+
+      <div class="container-box flex">
+        <div class="main-box flex-column">
+          <p class="title">Temperature</p>
+          <img src="./images/temperature.png" alt="temperature" />
+          <p class="temperature"><sup>o</sup> C</p>
+        </div>
+
+        <div class="main-box flex-column">
+          <p class="title">Humidity</p>
+          <img src="./images/humidity.png" alt="Humidity" />
+          <p class="humidity"><sup>o</sup> C</p>
+        </div>
+
+        <div class="switch-container btn" id="btn">
+          <input id="switch" type="checkbox" />
+          <div class="box" id="box">
+            <div class="backside"></div>
+            <label for="switch">
+              <span class="on">ON</span>
+              <span class="off">OFF</span>
+              <span class="cube-switch">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <p class="pump">pump is off now</p>
+    </main>
+
+    <footer>
+      <div>
+        مصطفي محمد مصطفي يونس - محمود خالد عمر عبدالعزيز- محمد فكري- محمد سعيد
+        عبدالله السيد- محمود عبدالحميد محمد عبدالحميد- أحمد كمال حسني نافع- محمد
+        فرج عبدالغني يونس- محمد أحمد عبدالمنعم- محمد مجدي عبدالله مرزوق-
+
+        <span>تحت اشراف / د تامر نقيب المهندسين اللي هينجحنا</span>
+      </div>
+    </footer>
+
+    <!-- ---------------------------- -->
+    <!-- <button class="btn" id="btn">Pump now</button>
+    <button class="off">Turn pump off</button>
+    <div class="pump"></div> -->
+    <script src="script.js"></script>
+  </body>
+</html>
