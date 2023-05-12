@@ -7,7 +7,7 @@ const { json } = require("express");
 // creating app from express library to create a server
 const app = express();
 
-// This is port number
+// This is port number which server will run on it
 const PORT = process.env.PORT || 3000;
 
 // Declaring variables to know pump,temperature and humidity state
@@ -63,6 +63,16 @@ wss.on("connection", (ws) => {
     } else {
       info.pump = "off";
       broadcast(info.pump);
+    }
+    info.temperature = message.temperature;
+    info.humidity = message.humidity;
+    broadcast(`Temperature ${info.temperature}`);
+    broadcast(`Humidity ${info.humidity}`);
+    if (prevTemperature !== info.temperature) {
+      broadcast(`Temperature ${info.temperature}`);
+    }
+    if (prevHumidity !== info.humidity) {
+      broadcast(`Humidity ${info.humidity}`);
     }
   });
 });
