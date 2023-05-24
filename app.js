@@ -3,22 +3,20 @@ const express = require("express");
 const ws = require("ws");
 const path = require("path");
 const { json } = require("express");
-
+const bodyParser = require("body-parser");
 // creating app from express library to create a server
 const app = express();
 
-// This is port number which server will run on it
+// This is port number
 const PORT = process.env.PORT || 3000;
 
 // Declaring variables to know pump,temperature and humidity state
 let info = {
   pump: "off",
-  temperature: 10,
+  temperature: 20,
   humidity: 40,
 };
 
-let prevTemperature = info.temperature;
-let prevHumidity = info.humidity;
 // linking with static path(frontend directory)
 app.use(express.static(path.join(__dirname, "./front")));
 
@@ -29,7 +27,7 @@ app.get("/", (req, res) => {
 
 // create a server from our app var name
 const server = app.listen(PORT, () => {
-  console.log("Server is running now");
+  console.log("Server is running now on port " + PORT);
 });
 
 // declaring our socketServer from ws library to connect between client and sever
@@ -43,41 +41,34 @@ wss.on("connection", (ws) => {
   // When there is messege from client that server do actions
   const information = JSON.stringify(info);
   broadcast(information);
-  console.log(info);
-  setInterval(function () {
-    if (prevTemperature !== info.temperature) {
-      broadcast(`Temperature ${info.temperature}`);
-    }
-    if (prevHumidity !== info.humidity) {
-      broadcast(`Humidity ${info.humidity}`);
-    }
-  }, 500);
 
   ws.on("message", (msg) => {
-    const message = JSON.parse(msg);
-    console.log(`pump is now ${message.value}`);
-    // console.log(`temperature is ${}`);
-    if (message.value === "on") {
-      info.pump = "on";
-      broadcast(info.pump);
+    if (msg.toString().length > 10) {
+      const messageFromFront = JSON.parse(msg);
+      console.log(messageFromFront);
+      info.pump = messageFromFront.value;
+      broadcast(JSON.stringify(info));
     } else {
-      info.pump = "off";
-      broadcast(info.pump);
-    }
-    info.temperature = message.temperature;
-    info.humidity = message.humidity;
-    broadcast(`Temperature ${info.temperature}`);
-    broadcast(`Humidity ${info.humidity}`);
-    if (prevTemperature !== info.temperature) {
-      broadcast(`Temperature ${info.temperature}`);
-    }
-    if (prevHumidity !== info.humidity) {
-      broadcast(`Humidity ${info.humidity}`);
+      const message = msg.toString();
+      let temp = "";
+      let hum = "";
+
+      for (let i = 0; i < 3; i++) {
+        temp += msg[i];
+      }
+      for (let i = 4; i < msg.length; i++) {
+        hum += msg[i];
+      }
+      info.temperature = temp;
+      info.humidity = hum;
+
+      console.log(message);
+      info.humidity = message;
     }
   });
 });
 
-// sending message to all clients function
+// // sending message to all clients function
 function broadcast(msg) {
   wss.clients.forEach((client) => {
     if (client.readyState === client.OPEN) {

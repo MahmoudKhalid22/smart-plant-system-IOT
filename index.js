@@ -6,13 +6,13 @@ const btn = document.querySelector(".box");
 const btnOff = document.querySelector(".off");
 const pump = document.querySelector(".pump");
 
-let information = {
+const information = {
   value: "off",
 };
 const ws = new WebSocket("ws://localhost:3000");
 ws.addEventListener("open", () => {
   console.log("We are connected");
-  ws.send(JSON.stringify(information));
+  //ws.send(JSON.stringify(information));
 });
 
 ws.addEventListener("message", function (event) {
@@ -38,29 +38,29 @@ ws.addEventListener("message", function (event) {
   }
 });
 btn.onclick = function () {
-  if (information.value === "off") {
-    information.value = "on";
-    // console.log(information.value);
-    ws.send(JSON.stringify(information));
-    ws.onmessage = (e) => {
-      console.log(e.data);
-      if (e.data === "on") {
-        pump.textContent = "pump is running now";
-      }
-    };
-  } else {
+  if (information.value === "on") {
     information.value = "off";
     // console.log(information.value);
+    // ws.send(JSON.stringify(information));
+    // ws.onmessage = (e) => {
+    //   console.log(e.data);
+    //   if (e.data === "on") {
+    //     pump.textContent = "pump is running now";
+    //   }
+    // };
+  } else {
+    information.value = "on";
+    // console.log(information.value);
 
-    ws.send(JSON.stringify(information));
-    ws.onmessage = (e) => {
-      console.log(e.data);
-      if (e.data === "off") {
-        pump.textContent = "pump is off now";
-      }
-    };
+    // ws.send(JSON.stringify(information));
+    // ws.onmessage = (e) => {
+    //   console.log(e.data);
+    //   if (e.data === "off") {
+    //     pump.textContent = "pump is off now";
+    //   }
+    // };
   }
-
+  ws.send(JSON.stringify(information));
   // const turnOff = document.querySelector(".off");
   // turnOff.onclick = function () {
   //
