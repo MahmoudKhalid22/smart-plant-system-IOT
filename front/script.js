@@ -9,7 +9,7 @@ const pump = document.querySelector(".pump");
 let information = {
   value: "off",
 };
-const ws = new WebSocket("ws://localhost:3000");
+const ws = new WebSocket("ws://192.168.1.5:3000");
 ws.addEventListener("open", () => {
   console.log("We are connected");
   ws.send(JSON.stringify(information));
