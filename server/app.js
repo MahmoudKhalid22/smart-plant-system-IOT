@@ -18,7 +18,8 @@ let info = {
 };
 
 // linking with static path(frontend directory)
-app.use(express.static(path.join(__dirname, "./front")));
+
+app.use(express.static(path.join(__dirname, "../front")));
 
 // This is main page
 app.get("/", (req, res) => {
@@ -43,30 +44,68 @@ wss.on("connection", (ws) => {
   broadcast(information);
 
   ws.on("message", (msg) => {
-    if (msg.toString().length > 10) {
-      const messageFromFront = JSON.parse(msg);
-      console.log(messageFromFront);
-      info.pump = messageFromFront.value;
+    const receivedData = JSON.parse(msg);
+
+    if (receivedData.value !== undefined) {
+      // Message from web page
+      setTimeout(() => {
+        console.log(receivedData);
+      }, 3000);
+
+      // Update 'info.pump' with the received pump value
+      info.pump = receivedData.value;
+
+      // Send 'info' object containing pump, temperature, and humidity to the web page
       broadcast(JSON.stringify(info));
     } else {
-      const message = msg.toString();
-      let temp = "";
-      let hum = "";
+      // Message from NodeMCU
+      setTimeout(() => {
+        // Extract temperature and humidity values
+        const temp = receivedData.temperature || "undefined";
+        const hum = receivedData.humidity || "undefined";
+        // Update 'info' object with temperature and humidity
+        info.temperature = temp;
+        info.humidity = hum;
+        // Only send pump data back to the NodeMCU
+        const pumpData = {
+          pump: receivedData.pump,
+        };
+        // Send pump data back to the NodeMCU
+        broadcast(JSON.stringify(receivedData));
 
-      for (let i = 0; i < 3; i++) {
-        temp += msg[i];
-      }
-      for (let i = 4; i < msg.length; i++) {
-        hum += msg[i];
-      }
-      info.temperature = temp;
-      info.humidity = hum;
-
-      console.log(message);
-      info.humidity = message;
+        console.log(receivedData);
+      }, 3000);
     }
   });
 });
+
+//   ws.on("message", (msg) => {
+//     console.log(msg.toString());
+
+//     if (msg.toString().length > 10) {
+//       const messageFromFront = JSON.parse(msg);
+//       console.log(messageFromFront);
+//       info.pump = messageFromFront.value;
+//       broadcast(JSON.stringify(info));
+//     } else {
+//       const message = msg.toString();
+//       let temp = "";
+//       let hum = "";
+
+//       for (let i = 0; i < 3; i++) {
+//         temp += msg[i];
+//       }
+//       for (let i = 4; i < msg.length; i++) {
+//         hum += msg[i];
+//       }
+//       info.temperature = temp;
+//       info.humidity = hum;
+
+//       console.log(message);
+//       info.humidity = message;
+//     }
+//   });
+// });
 
 // // sending message to all clients function
 function broadcast(msg) {

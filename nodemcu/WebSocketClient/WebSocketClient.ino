@@ -13,13 +13,21 @@ WebSocketsClient webSocket;
 const char *ssid = "Software_Eng";
 const char *pass = "@Eng0122549";
 
-#define SERVER "192.168.1.5"
+
+#define SERVER "192.168.1.2"
 #define PORT 3000
 #define URL "/"
 
+int lastHumidityValue = 0;
+unsigned long lastSendTime = 0;  // Variable to track the last time data was sent
+const int sendInterval = 5000;    // Send data every 5000 milliseconds (5 seconds)
+
+
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
-    JSONVar data;  // Declare outside the switch statement
+    JSONVar data; 
     const char *pumpStatus;
+    int humidityValue;
+    String responseStr;
 	switch(type) {
 		case WStype_DISCONNECTED:
 			// Serial.printf("[WSc] Disconnected!\n");
@@ -28,7 +36,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 			// Serial.printf("[WSc] Connected to url: %s\n", payload);
 
 			// send message to server when Connected
-			webSocket.sendTXT("Connected");
+			// webSocket.sendTXT("Connected");
 		}
 			break;
 		case WStype_TEXT:
@@ -42,7 +50,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                 return;
             }
 
-    pumpStatus = (const char *)data["pump"];
+            Serial.print(data);
+            pumpStatus = (const char *)data["pump"];
 
             // Print the pump status
             Serial.print("Pump status: ");
@@ -72,6 +81,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
 void setup() {
   pinMode(D2,OUTPUT);
+  pinMode(A0,INPUT);
 	// Serial.begin(921600);
 	Serial.begin(115200);
   
@@ -111,4 +121,19 @@ void setup() {
 
 void loop() {
 	webSocket.loop();
+
+  unsigned long currentTime = millis();
+    if (currentTime - lastSendTime >= sendInterval) {
+        lastSendTime = currentTime;
+
+        // Add your periodic data sending logic here
+        JSONVar data;
+        int humidityValue = analogRead(A0);
+        Serial.print("Humidity Value: ");
+        Serial.println(humidityValue);
+        data["humidity"] = humidityValue;
+        data["temperature"] = "undefined";
+        String responseStr = JSON.stringify(data);
+        webSocket.sendTXT(responseStr);
+    }
 }
