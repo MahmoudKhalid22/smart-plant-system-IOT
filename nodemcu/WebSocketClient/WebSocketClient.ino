@@ -1,14 +1,18 @@
 #include <Arduino.h>
+#include <dht11.h>
+
+
 
 #include <ESP8266WiFi.h>
-// #include <ESP8266WiFiMulti.h>
 #include <Arduino_JSON.h>
 #include <WebSocketsClient.h>
 
 // #include <Hash.h>
 
-// ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
+
+#define DHT11PIN A0
+dht11 DHT11;
 
 const char *ssid = "Software_Eng";
 const char *pass = "@Eng0122549";
@@ -18,9 +22,11 @@ const char *pass = "@Eng0122549";
 #define PORT 3000
 #define URL "/"
 
+
+
 int lastHumidityValue = 0;
 unsigned long lastSendTime = 0;  // Variable to track the last time data was sent
-const int sendInterval = 5000;    // Send data every 5000 milliseconds (5 seconds)
+const int sendInterval = 1000;    // Send data every 5000 milliseconds (5 seconds)
 
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
@@ -82,6 +88,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 void setup() {
   pinMode(D2,OUTPUT);
   pinMode(A0,INPUT);
+  pinMode(D6,INPUT);
 	// Serial.begin(921600);
 	Serial.begin(115200);
   
@@ -122,6 +129,17 @@ void setup() {
 void loop() {
 	webSocket.loop();
 
+//  int chk = DHT11.read(DHT11PIN);
+
+//  Serial.println(chk);
+
+//  Serial.print("Humidity (%): ");
+//  Serial.println((float)DHT11.humidity, 2);
+
+//   Serial.print("Temperature  (C): ");
+//   Serial.println((float)DHT11.temperature, 2);
+//   delay(2000);
+
   unsigned long currentTime = millis();
     if (currentTime - lastSendTime >= sendInterval) {
         lastSendTime = currentTime;
@@ -129,10 +147,14 @@ void loop() {
         // Add your periodic data sending logic here
         JSONVar data;
         int humidityValue = analogRead(A0);
-        Serial.print("Humidity Value: ");
+        humidityValue = 100 - (humidityValue / 400 ) * 100;
+        if (humidityValue < 0)  humidityValue = 0;
         Serial.println(humidityValue);
+        int temperatureValue = digitalRead(D6);
+        // Serial.print("Humidity Value: ");
+        // Serial.println(humidityValue);
         data["humidity"] = humidityValue;
-        data["temperature"] = "undefined";
+        data["temperature"] = 24;
         String responseStr = JSON.stringify(data);
         webSocket.sendTXT(responseStr);
     }
