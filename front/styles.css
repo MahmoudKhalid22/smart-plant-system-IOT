@@ -4,9 +4,9 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
-  background: linear-gradient(to bottom, #a1c0b6 0%, #cdfcf3 100%);
+  /* background: linear-gradient(to bottom, #a1c0b6 0%, #cdfcf3 100%); */
   background-repeat: no-repeat;
   background-size: cover;
   /* margin: 0 auto; */
@@ -43,10 +43,11 @@ body {
   font-weight: bold;
   color: #fff;
 }
-.temperature,.humidity{
-font-size: 2rem;
-font-weight: bold;
-color: #ffffff;
+.temperature,
+.humidity {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
 }
 /* .humidity{
   font-size: 2rem;
@@ -54,7 +55,7 @@ color: #ffffff;
 } */
 
 .main-box {
-  background: #a1c0b6;
+  background: #253487;
   border: #dfdfdf solid 3px;
   width: 200px;
   gap: 1rem;
@@ -81,7 +82,22 @@ color: #ffffff;
   font-weight: 600;
   padding-bottom: 1rem;
 }
-
+.hum,
+.soil {
+  position: relative;
+}
+.hum .background,
+.soil .soilBg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1rem;
+  width: 100%;
+  background-color: #add8e6;
+  height: 0;
+  width: 100%;
+  z-index: -2;
+}
 /* --------switch ------------*/
 body * {
   box-sizing: border-box;
@@ -101,7 +117,7 @@ body * {
 }
 
 .box:after {
-  content: '';
+  content: "";
   background: #212121;
   width: 98%;
   height: 98%;
@@ -143,7 +159,7 @@ label {
 }
 
 label:before {
-  content: '';
+  content: "";
   width: 10.5vmin;
   height: 20vmin;
   position: absolute;
@@ -159,7 +175,7 @@ label:before {
 
 label .on:before,
 label .on:after {
-  content: '';
+  content: "";
   width: 2vmin;
   height: 0.15vmin;
   position: absolute;

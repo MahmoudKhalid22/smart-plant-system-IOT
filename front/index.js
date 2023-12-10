@@ -6,6 +6,7 @@ const btn = document.querySelector(".box");
 const btnOff = document.querySelector(".off");
 const pump = document.querySelector(".pump");
 
+
 const information = {
   value: "off",
 };

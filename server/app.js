@@ -13,8 +13,9 @@ const PORT = process.env.PORT || 3000;
 // Declaring variables to know pump,temperature and humidity state
 let info = {
   pump: "off",
-  temperature: 20,
-  humidity: 40,
+  temperature: 40,
+  humidity: 30,
+  soil: 50,
 };
 
 // linking with static path(frontend directory)

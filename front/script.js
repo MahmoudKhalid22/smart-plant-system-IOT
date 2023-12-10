@@ -1,10 +1,16 @@
 "use strict";
 const temp = document.querySelector(".temperature");
 const hum = document.querySelector(".humidity");
+const soil = document.querySelector(".soilTitle");
+
 // const btn = document.getElementById("btn");
 const btn = document.querySelector(".box");
 const btnOff = document.querySelector(".off");
 const pump = document.querySelector(".pump");
+const box = document.querySelector(".main-box");
+// const soil = document.querySelector(".soil");
+const humBg = document.querySelector(".background");
+const soilBg = document.querySelector(".soilBg");
 
 let information = {
   value: "off",
@@ -22,14 +28,22 @@ ws.addEventListener("message", function (event) {
   // broadcast(JSON.stringify(info));
   temp.textContent = info.temperature;
   hum.textContent = info.humidity;
-  // setInterval(function() {
-  //   if(prevTemperature !== info.temperature){
-  //     broadcast(`Temperature ${info.temperature}`);
-  //   }
-  // if(prevHumidity !== info.humidity){
-  // broadcast(`Humidity ${info.humidity}`);
-  //   }
-  // }, 500);
+  soil.textContent = info.soil;
+
+  humBg.style.height = info.humidity + "%";
+  soilBg.style.height = info.soil + "%";
+
+  let color = "hsl(" + (200 - info.humidity * 2) + ", 100%, 50%)";
+  let colorSoil = "hsl(" + (30 + info.soil * 2) + ", 100%, 50%)";
+
+  var hue = Math.min(240 + info.temperature * 2, 360); // Adjust the multiplier as needed
+  let colorTemp = "hsl(" + hue + ", 100%, 50%)";
+  humBg.style.backgroundColor = color;
+  soilBg.style.backgroundColor = colorSoil;
+
+  box.style.backgroundColor = colorTemp;
+
+  console.log(info);
   // PUMP
   if (info.pump === "on") {
     pump.textContent = "pump is running now";
