@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Declaring variables to know pump,temperature and humidity state
 let info = {
   pump: "off",
-  temperature: 40,
+  temperature: 20,
   humidity: 30,
   soil: 50,
 };
