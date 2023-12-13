@@ -32,3 +32,5 @@ The Smart Plant System Control is a project designed to monitor and control the 
 {
   "server_address": "ws://your-server-address:port"
 }
+```
+![image of web page](https://github.com/MahmoudKhalid22/smart-plant-system-IOT/blob/main/front/images/plant.jpg)
